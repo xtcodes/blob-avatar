@@ -41,7 +41,7 @@ a:link, a:visited {
   background: url(avatar.png);
   background-size: cover;
   background-position: center;
-  border: 5px solid transparent; /* default transparent border */
+  border: 10px solid transparent; /* Default border size updated */
   box-sizing: border-box;
 }
 p {
@@ -63,7 +63,7 @@ button:hover {
   background: #17aa8d;
   cursor: pointer;
 }
-input[type="file"], input[type="color"] {
+input[type="file"], input[type="color"], select, input[type="number"] {
   margin: 10px;
 }
 @media (max-width: 700px) {
@@ -81,18 +81,28 @@ input[type="file"], input[type="color"] {
     <div class="blob" id="blob"></div>
   </div>
   <p class="style">border-radius: <span>Haha, blobs are funny :D</span>;</p>
-  <p><input type="file" id="imageInput" accept="image/*"></p>
-  <p>
+  <input type="file" id="imageInput" accept="image/*">
+  <br>
   <label for="color1">Warna Gradient 1:</label>
   <input type="color" id="color1" value="#1abc9c">
   <label for="color2">Warna Gradient 2:</label>
   <input type="color" id="color2" value="#2ecc71">
-  </p>
-  <p>
+  <br>
+  <label for="direction">Arah Gradien:</label>
+  <select id="direction">
+    <option value="to right">Kanan</option>
+    <option value="to left">Kiri</option>
+    <option value="to bottom">Bawah</option>
+    <option value="to top">Atas</option>
+    <option value="45deg">Diagonal ↘</option>
+    <option value="135deg">Diagonal ↙</option>
+  </select>
+  <label for="borderWidth">Tebal Border (px):</label>
+  <input type="number" id="borderWidth" value="10" min="1" max="50">
+  <br>
   <button onclick="generateBlob()">Generate Blob</button>
   <button onclick="applyGradientBorder()">Terapkan Border Gradient</button>
   <button onclick="downloadBlob()">Download</button>
-  </p>
 </main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -115,12 +125,15 @@ function generateBlob() {
 function applyGradientBorder() {
   const color1 = document.getElementById("color1").value;
   const color2 = document.getElementById("color2").value;
+  const direction = document.getElementById("direction").value;
+  const borderWidth = document.getElementById("borderWidth").value;
   const blob = document.getElementById("blob");
 
-  blob.style.border = "5px solid transparent";
+  blob.style.border = `${borderWidth}px solid transparent`;
   blob.style.backgroundOrigin = "border-box";
   blob.style.backgroundClip = "content-box, border-box";
-  blob.style.backgroundImage = `${blob.style.backgroundImage}, linear-gradient(to right, ${color1}, ${color2})`;
+  const image = blob.style.backgroundImage.split(',')[0];
+  blob.style.backgroundImage = `${image}, linear-gradient(${direction}, ${color1}, ${color2})`;
 }
 
 $(document).ready(function() {
