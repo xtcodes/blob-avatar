@@ -8,94 +8,145 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style type="text/css">
 body {
-background-color: #f0f0f2;
-margin: 0;
-padding: 0;
-font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;        
+  background-color: #f0f0f2;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 main {
-width: 600px;
-margin: 5em auto;
-padding: 2em;
-background-color: #fdfdff;
-border-radius: 0.5em;
-box-shadow: 2px 3px 7px 2px rgba(0,0,0,0.02);
+  width: 600px;
+  margin: 5em auto;
+  padding: 2em;
+  background-color: #fdfdff;
+  border-radius: 0.5em;
+  box-shadow: 2px 3px 7px 2px rgba(0,0,0,0.02);
 }
 a:link, a:visited {
-color: #38488f;
-text-decoration: none;
+  color: #38488f;
+  text-decoration: none;
 }
 * {
-text-align: center;
+  text-align: center;
 }
 .blob-wrapper {
-max-width: 400px;
-height: 400px;
-margin: 0 auto;
+  max-width: 400px;
+  height: 400px;
+  margin: 0 auto;
+  position: relative;
 }
 .blob {
-width: 100%;
-height: 100%;
-margin-top: 20px;
-background: url(avatar.png);
-background-size: cover;
+  width: 100%;
+  height: 100%;
+  margin-top: 20px;
+  background: url(avatar.png);
+  background-size: cover;
+  background-position: center;
+  border: 5px solid transparent; /* default transparent border */
+  box-sizing: border-box;
 }
 p {
-font-size: 20px;
-font-family: monospace, monospace;
+  font-size: 20px;
+  font-family: monospace, monospace;
 }
 button {
-margin: 0 0 0 20px;
-background: #1abc9c;
-color: white;
-border: 0;
-padding: 10px 30px;
-border-radius: 2px;
-font-size: 16px;
-font-weight: bold;
-transition-duration: 0.4s;
+  margin: 10px;
+  background: #1abc9c;
+  color: white;
+  border: 0;
+  padding: 10px 30px;
+  border-radius: 2px;
+  font-size: 16px;
+  font-weight: bold;
+  transition-duration: 0.4s;
 }
 button:hover {
-background: #17aa8d;
-cursor: pointer;
+  background: #17aa8d;
+  cursor: pointer;
+}
+input[type="file"], input[type="color"] {
+  margin: 10px;
 }
 @media (max-width: 700px) {
-main {
-margin: 0 auto;
-width: auto;
+  main {
+    margin: 0 auto;
+    width: auto;
+  }
 }
-}
-</style>    
+</style>
 </head>
 
 <body>
 <main>
-<div class="blob-wrapper">
-<div class="blob"></div>
-</div>
-<p class="style">border-radius: <span>Haha, blobs are funny :D</span>;</p>
-<button onclick="generateBlob()">Click me</button>
+  <div class="blob-wrapper">
+    <div class="blob" id="blob"></div>
+  </div>
+  <p class="style">border-radius: <span>Haha, blobs are funny :D</span>;</p>
+  <p><input type="file" id="imageInput" accept="image/*"></p>
+  <p>
+  <label for="color1">Warna Gradient 1:</label>
+  <input type="color" id="color1" value="#1abc9c">
+  <label for="color2">Warna Gradient 2:</label>
+  <input type="color" id="color2" value="#2ecc71">
+  </p>
+  <p>
+  <button onclick="generateBlob()">Generate Blob</button>
+  <button onclick="applyGradientBorder()">Terapkan Border Gradient</button>
+  <button onclick="downloadBlob()">Download</button>
+  </p>
 </main>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
 <script>
 function generateBlob() {
-const percentage1 = _.random(25, 75);
-const percentage2 = _.random(25, 75);
-const percentage3 = _.random(25, 75);
-const percentage4 = _.random(25, 75);
-var percentage11 = 100 - percentage1;
-var percentage21 = 100 - percentage2;
-var percentage31 = 100 - percentage3;
-var percentage41 = 100 - percentage4;
-var borderRadius = `${percentage1}% ${percentage11}% ${percentage21}% ${percentage2}% / ${percentage3}% ${percentage4}% ${percentage41}% ${percentage31}%`;
-$(".blob").css("border-radius", borderRadius);
-$(".style span").html(borderRadius)
+  const percentage1 = _.random(25, 75);
+  const percentage2 = _.random(25, 75);
+  const percentage3 = _.random(25, 75);
+  const percentage4 = _.random(25, 75);
+  var percentage11 = 100 - percentage1;
+  var percentage21 = 100 - percentage2;
+  var percentage31 = 100 - percentage3;
+  var percentage41 = 100 - percentage4;
+  var borderRadius = `${percentage1}% ${percentage11}% ${percentage21}% ${percentage2}% / ${percentage3}% ${percentage4}% ${percentage41}% ${percentage31}%`;
+  $(".blob").css("border-radius", borderRadius);
+  $(".style span").html(borderRadius);
 }
 
-$(document).ready(function(){
-generateBlob();
+function applyGradientBorder() {
+  const color1 = document.getElementById("color1").value;
+  const color2 = document.getElementById("color2").value;
+  const blob = document.getElementById("blob");
+
+  blob.style.border = "5px solid transparent";
+  blob.style.backgroundOrigin = "border-box";
+  blob.style.backgroundClip = "content-box, border-box";
+  blob.style.backgroundImage = `${blob.style.backgroundImage}, linear-gradient(to right, ${color1}, ${color2})`;
+}
+
+$(document).ready(function() {
+  generateBlob();
+
+  $('#imageInput').on('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        $('#blob').css('background-image', `url(${e.target.result})`);
+      }
+      reader.readAsDataURL(file);
+    }
+  });
 });
+
+function downloadBlob() {
+  html2canvas(document.querySelector(".blob")).then(canvas => {
+    const link = document.createElement('a');
+    link.download = 'blob.png';
+    link.href = canvas.toDataURL();
+    link.click();
+  });
+}
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </body>
 </html>
