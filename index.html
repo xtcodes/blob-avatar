@@ -31,24 +31,24 @@ a:link, a:visited {
 .blob-wrapper {
   max-width: 300px;
   height: 300px;
-  margin: 0 auto;
+  margin: 20px auto;
   position: relative;
 }
 .blob {
   width: 100%;
   height: 100%;
   margin-top: 20px;
+  padding: 5px;
   background: url(avatar.png);
   background-size: cover;
   background-position: center;
-  border: 10px solid transparent; /* Default border size updated */
-  box-sizing: border-box;
 }
 p {
   font-size: 20px;
   font-family: monospace, monospace;
 }
 button {
+  display: inline-block;
   margin: 10px;
   background: #1abc9c;
   color: white;
@@ -63,7 +63,7 @@ button:hover {
   background: #17aa8d;
   cursor: pointer;
 }
-input[type="file"], input[type="color"], select, input[type="number"] {
+input[type="file"] {
   margin: 10px;
 }
 @media (max-width: 700px) {
@@ -81,28 +81,11 @@ input[type="file"], input[type="color"], select, input[type="number"] {
     <div class="blob" id="blob"></div>
   </div>
   <p class="style">border-radius: <span>Haha, blobs are funny :D</span>;</p>
-  <input type="file" id="imageInput" accept="image/*">
-  <br>
-  <label for="color1">Warna Gradient 1:</label>
-  <input type="color" id="color1" value="#1abc9c">
-  <label for="color2">Warna Gradient 2:</label>
-  <input type="color" id="color2" value="#2ecc71">
-  <br>
-  <label for="direction">Arah Gradien:</label>
-  <select id="direction">
-    <option value="to right">Kanan</option>
-    <option value="to left">Kiri</option>
-    <option value="to bottom">Bawah</option>
-    <option value="to top">Atas</option>
-    <option value="45deg">Diagonal ↘</option>
-    <option value="135deg">Diagonal ↙</option>
-  </select>
-  <label for="borderWidth">Tebal Border (px):</label>
-  <input type="number" id="borderWidth" value="10" min="1" max="50">
-  <br>
-  <button onclick="generateBlob()">Generate Blob</button>
-  <button onclick="applyGradientBorder()">Terapkan Border Gradient</button>
-  <button onclick="downloadBlob()">Download</button>
+  <p><input type="file" id="imageInput" accept="image/*"></p>
+  <p>
+    <button onclick="generateBlob()">Generate Blob</button>
+    <button onclick="downloadBlob()">Download</button>
+  </p>
 </main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -120,20 +103,6 @@ function generateBlob() {
   var borderRadius = `${percentage1}% ${percentage11}% ${percentage21}% ${percentage2}% / ${percentage3}% ${percentage4}% ${percentage41}% ${percentage31}%`;
   $(".blob").css("border-radius", borderRadius);
   $(".style span").html(borderRadius);
-}
-
-function applyGradientBorder() {
-  const color1 = document.getElementById("color1").value;
-  const color2 = document.getElementById("color2").value;
-  const direction = document.getElementById("direction").value;
-  const borderWidth = document.getElementById("borderWidth").value;
-  const blob = document.getElementById("blob");
-
-  blob.style.border = `${borderWidth}px solid transparent`;
-  blob.style.backgroundOrigin = "border-box";
-  blob.style.backgroundClip = "content-box, border-box";
-  const image = blob.style.backgroundImage.split(',')[0];
-  blob.style.backgroundImage = `${image}, linear-gradient(${direction}, ${color1}, ${color2})`;
 }
 
 $(document).ready(function() {
